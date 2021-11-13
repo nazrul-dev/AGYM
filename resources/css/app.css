@@ -1,0 +1,104 @@
+@import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.menu-list li .dropdown {
+    @apply flex items-center justify-between w-full p-3 space-x-3 hover:text-black hover:bg-gray-100;
+}
+
+.menu-list li a .dropdown-title {
+    @apply flex items-center space-x-2;
+}
+
+
+.menu-list li a {
+    @apply flex py-2 text-gray-300;
+  }
+
+  .menu-list li > a {
+    @apply hover:bg-gray-800;
+  }
+
+
+  .menu-list li.active > a {
+    @apply bg-gray-700;
+  }
+
+  .menu-list li ul {
+    @apply hidden;
+  }
+
+  .menu-list li ul a {
+    @apply p-3 font-semibold ;
+  }
+
+  .menu-list li.active ul {
+    @apply block bg-gray-700;
+  }
+
+
+  table {
+    @apply w-full;
+  }
+
+  thead {
+    @apply hidden lg:table-header-group;
+  }
+
+  tr {
+    @apply relative block max-w-full border-b-4 border-gray-100 lg:table-row lg:border-b-0;
+  }
+
+  tr:last-child {
+    @apply border-b-0;
+  }
+
+  th {
+    @apply lg:text-left lg:py-2 lg:px-3;
+  }
+
+  td {
+    @apply flex justify-between px-4 py-3 text-right align-top border-b border-gray-100 lg:table-cell lg:text-left lg:py-2 lg:px-3 lg:align-middle lg:border-b-0;
+  }
+
+  tr:nth-child(odd) td {
+    @apply lg:bg-gray-50;
+  }
+
+  td:last-child {
+    @apply border-b-0;
+  }
+
+  tbody tr:hover td {
+    @apply lg:bg-gray-100;
+  }
+
+  td:before {
+    content: attr(data-label);
+    @apply pr-3 font-semibold text-left lg:hidden;
+  }
+
+  td.checkbox-cell, th.checkbox-cell {
+    @apply lg:w-5;
+  }
+
+  td.progress-cell progress {
+    @apply flex self-center w-2/5 lg:w-full;
+  }
+
+  td.image-cell {
+    @apply border-b-0 lg:w-6;
+  }
+
+  td.image-cell:before, td.actions-cell:before {
+    @apply hidden ;
+  }
+
+  td.image-cell .image {
+    @apply w-24 h-24 mx-auto lg:w-6 lg:h-6;
+  }
+
+  .table-pagination {
+    @apply px-6 py-3 border-t border-gray-100;
+  }
