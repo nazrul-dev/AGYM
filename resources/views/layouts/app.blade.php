@@ -39,40 +39,128 @@
                     </a>
                 </div>
                 @auth
-                <div class="py-6">
-                    <ul class="flex flex-col w-full menu-list">
-                        <li>
-                            <a class="dropdown" href="{{ route('dashboard') }}">
-                                <div class="dropdown-title">
-                                    <x-icon name="home" style="solid" class="w-5 h-5" />
-                                    <span class="font-semibold"> Dashboard</span>
-                                </div>
-                            </a>
-                        </li>
-                        @if (in_array(auth()->user()->role, ['master', 'operator']))
+                    <div class="py-6">
+                        <ul class="flex flex-col w-full menu-list">
+                            <li>
+                                <a class="dropdown" href="{{ route('dashboard') }}">
+                                    <div class="dropdown-title">
+                                        <x-icon name="home" style="solid" class="w-5 h-5" />
+                                        <span class="font-semibold"> Dashboard</span>
+                                    </div>
+                                </a>
+                            </li>
+                            @if (in_array(auth()->user()->role, ['master', 'operator']))
+                                <li>
+                                    <a class="dropdown" href="javascript:void(0)">
+                                        <div class="dropdown-title">
+                                            <x-icon name="database" style="solid" class="w-5 h-5" />
+                                            <span class="font-semibold"> Master</span>
+                                        </div>
+
+                                        <span class="icon"><i class="mdi mdi-plus"></i></span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('master.product') }}">
+                                                <span>Produk</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('master.category') }}">
+                                                <span>Kategori</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('master.staff') }}">
+                                                <span>Staff</span>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+
+                                </li>
+
+                                <li>
+                                    <a class="dropdown" href="javascript:void(0)">
+                                        <div class="dropdown-title">
+                                            <x-icon name="cube" style="solid" class="w-5 h-5" />
+                                            <span class="font-semibold"> Stok</span>
+                                        </div>
+
+                                        <span class="icon"><i class="mdi mdi-plus"></i></span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('stocks.data', 'warehouse') }}">
+                                                <span>Gudang</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('stocks.data', 'store') }}">
+                                                <span>Toko</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
                             <li>
                                 <a class="dropdown" href="javascript:void(0)">
                                     <div class="dropdown-title">
-                                        <x-icon name="database" style="solid" class="w-5 h-5" />
-                                        <span class="font-semibold"> Master</span>
+                                        <x-icon name="switch-vertical" style="solid" class="w-5 h-5" />
+                                        <span class="font-semibold"> Transaksi</span>
                                     </div>
 
                                     <span class="icon"><i class="mdi mdi-plus"></i></span>
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="{{ route('master.product') }}">
-                                            <span>Produk</span>
+                                        <a href="{{ route('transaction.select.type') }}">
+                                            <span>Tambah Transaksi</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('master.category') }}">
-                                            <span>Kategori</span>
+                                        <a href="{{ route('transaction.data') }}">
+                                            <span>Data Transaksi</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="dropdown" href="{{ route('loans.data') }}">
+                                    <div class="dropdown-title">
+                                        <x-icon name="cash" style="solid" class="w-5 h-5" />
+                                        <span class="font-semibold"> Piutang </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown" href="{{ route('simpanan') }}">
+                                    <div class="dropdown-title">
+                                        <x-icon name="cash" style="solid" class="w-5 h-5" />
+                                        <span class="font-semibold"> Uang Tersimpan </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown" href="javascript:void(0)">
+                                    <div class="dropdown-title">
+                                        <x-icon name="users" style="solid" class="w-5 h-5" />
+                                        <span class="font-semibold"> Member</span>
+                                    </div>
+
+                                    <span class="icon"><i class="mdi mdi-plus"></i></span>
+                                </a>
+                                <ul>
+
+                                    <li>
+                                        <a href="{{ route('members.data') }}">
+                                            <span>Data Member</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('master.staff') }}">
-                                            <span>Staff</span>
+                                        <a href="{{ route('members.expired') }}">
+                                            <span>Expired Member</span>
                                         </a>
                                     </li>
 
@@ -80,168 +168,107 @@
                                 </ul>
 
                             </li>
+                            @if (in_array(auth()->user()->role, ['master', 'operator']))
+                                <li>
+                                    <a class="dropdown" href="javascript:void(0)">
+                                        <div class="dropdown-title">
+                                            <x-icon name="document-report" style="solid" class="w-5 h-5" />
+                                            <span class="font-semibold"> laporan</span>
+                                        </div>
 
+                                        <span class="icon"><i class="mdi mdi-plus"></i></span>
+                                    </a>
+                                    <ul>
+
+                                        <li>
+                                            <a href="{{ route('reports.transactions') }}">
+                                                <span>Transaksi</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('reports.stocks') }}">
+                                                <span>Stok</span>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+
+                                </li>
+
+                            @endif
                             <li>
                                 <a class="dropdown" href="javascript:void(0)">
                                     <div class="dropdown-title">
-                                        <x-icon name="cube" style="solid" class="w-5 h-5" />
-                                        <span class="font-semibold"> Stok</span>
+                                        <x-icon name="cog" style="solid" class="w-5 h-5" />
+                                        <span class="font-semibold">Pengaturan</span>
                                     </div>
 
                                     <span class="icon"><i class="mdi mdi-plus"></i></span>
                                 </a>
                                 <ul>
+                                    @if (auth()->user()->role == 'master')
+                                        <li>
+                                            <a href="{{ route('setting', 'umum') }}">
+                                                <span>Umum</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('setting', 'biaya') }}">
+                                                <span>Biaya</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
-                                        <a href="{{ route('stocks.data', 'warehouse') }}">
-                                            <span>Gudang</span>
+                                        <a href="{{ route('account') }}">
+                                            <span>Akun</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{ route('stocks.data', 'store') }}">
-                                            <span>Toko</span>
-                                        </a>
-                                    </li>
+
                                 </ul>
+
                             </li>
-                        @endif
-                        <li>
-                            <a class="dropdown" href="javascript:void(0)">
-                                <div class="dropdown-title">
-                                    <x-icon name="switch-vertical" style="solid" class="w-5 h-5" />
-                                    <span class="font-semibold"> Transaksi</span>
-                                </div>
 
-                                <span class="icon"><i class="mdi mdi-plus"></i></span>
-                            </a>
-                            <ul>
-                                <li>
-                                    <a href="{{ route('transaction.select.type') }}">
-                                        <span>Tambah Transaksi</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('transaction.data') }}">
-                                        <span>Data Transaksi</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="dropdown" href="{{ route('loans.data') }}">
-                                <div class="dropdown-title">
-                                    <x-icon name="cash" style="solid" class="w-5 h-5" />
-                                    <span class="font-semibold"> Piutang </span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown" href="javascript:void(0)">
-                                <div class="dropdown-title">
-                                    <x-icon name="users" style="solid" class="w-5 h-5" />
-                                    <span class="font-semibold"> Member</span>
-                                </div>
+                        </ul>
 
-                                <span class="icon"><i class="mdi mdi-plus"></i></span>
-                            </a>
-                            <ul>
-
-                                <li>
-                                    <a href="{{ route('members.data') }}">
-                                        <span>Data Member</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('members.expired') }}">
-                                        <span>Expired Member</span>
-                                    </a>
-                                </li>
-
-
-                            </ul>
-
-                        </li>
-                        @if (in_array(auth()->user()->role, ['master', 'operator']))
-                            <li>
-                                <a class="dropdown" href="{{ route('reports.transactions') }}">
-                                    <div class="dropdown-title">
-                                        <x-icon name="document-report" style="solid" class="w-5 h-5" />
-                                        <span class="font-semibold"> laporan</span>
-                                    </div>
-
-
-                                </a>
-                            </li>
-                        @endif
-                        <li>
-                            <a class="dropdown" href="javascript:void(0)">
-                                <div class="dropdown-title">
-                                    <x-icon name="cog" style="solid" class="w-5 h-5" />
-                                    <span class="font-semibold">Pengaturan</span>
-                                </div>
-
-                                <span class="icon"><i class="mdi mdi-plus"></i></span>
-                            </a>
-                            <ul>
-                                @if (auth()->user()->role == 'master')
-                                    <li>
-                                        <a href="{{ route('setting', 'umum') }}">
-                                            <span>Umum</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('setting', 'biaya') }}">
-                                            <span>Biaya</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                <li>
-                                    <a href="{{ route('account') }}">
-                                        <span>Akun</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-
-                        </li>
-
-                    </ul>
-
-                </div>
+                    </div>
                 @endauth
             </div>
         </div>
         <div class="flex-1 h-screen overflow-y-auto">
             @auth
-            <nav class="sticky top-0 z-10 flex items-center text-gray-700 bg-gray-100 ">
-                <div x-show="!sideIsopenSide()" class="flex">
-                    <a x-show="!sideIsopenSide()" @click.prevent="sideopenSide()"
-                        class="p-3 text-white bg-gray-800 rounded-br-xl hover:bg-gray-900" href="#">
-                        <x-icon name="menu-alt-2" class="w-5 h-5" />
-                    </a>
-                    <a class="p-3 ml-5 font-semibold tracking-wider hover:text-black" href="#">
-                        {{ config('global.nama_gym') }}
-                    </a>
-                </div>
-                <div class="flex items-center p-3 pr-2 ml-auto space-x-3 xl:pr-10">
-
-                    <div>
-                        <x-dropdown>
-                            <x-slot name="trigger">
-                                <div class="flex items-center space-x-2">
-                                    <x-icon name="user-circle" class="w-6 h-6" />
-                                    <div class="font-semibold">
-                                        {{ auth()->user()->name }}
-                                    </div>
-                                </div>
-                            </x-slot>
-
-
-                            <x-dropdown.item href="{{ route('account') }}" label="Pengaturan Akun" />
-                            <x-dropdown.item onClick="event.preventDefault(); document.getElementById('logout-form').submit();" separator label="Logout" />
-                        </x-dropdown>
+                <nav class="sticky top-0 z-10 flex items-center text-gray-700 bg-gray-100 ">
+                    <div x-show="!sideIsopenSide()" class="flex">
+                        <a x-show="!sideIsopenSide()" @click.prevent="sideopenSide()"
+                            class="p-3 text-white bg-gray-800 rounded-br-xl hover:bg-gray-900" href="#">
+                            <x-icon name="menu-alt-2" class="w-5 h-5" />
+                        </a>
+                        <a class="p-3 ml-5 font-semibold tracking-wider hover:text-black" href="#">
+                            {{ config('global.nama_gym') }}
+                        </a>
                     </div>
-                </div>
-            </nav>
+                    <div class="flex items-center p-3 pr-2 ml-auto space-x-3 xl:pr-10">
+
+                        <div>
+                            <x-dropdown>
+                                <x-slot name="trigger">
+                                    <div class="flex items-center space-x-2">
+                                        <x-icon name="user-circle" class="w-6 h-6" />
+                                        <div class="font-semibold">
+                                            {{ auth()->user()->name }}
+                                        </div>
+                                    </div>
+                                </x-slot>
+
+
+                                <x-dropdown.item href="{{ route('account') }}" label="Pengaturan Akun" />
+                                <x-dropdown.item
+                                    onClick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    separator label="Logout" />
+                            </x-dropdown>
+                        </div>
+                    </div>
+                </nav>
             @endauth
             <main class="container mx-auto ">
 

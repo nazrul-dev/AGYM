@@ -1,9 +1,6 @@
 <div>
-
     <div>
-
         <x-card title="Piutang">
-
             <x-slot name="action">
                 <x-input icon="search" type="Search" wire:model="searchTerm" placeholder="Cari Invoice" />
             </x-slot>
@@ -12,7 +9,6 @@
 
                     <th>Invoice</th>
                     <th>Kasir</th>
-
                     <th>Total</th>
                     <th>DP / Panjar</th>
                     <th>Sisa Piutang</th>
@@ -24,7 +20,8 @@
                         <tr>
 
                             <td data-label="Invoice">
-                                <a  class="text-green-500 underline" href="{{route('transaction.info',$item->id )}}"> {{ $item->invoice }}</a>
+                                <a class="text-green-500 underline" href="{{ route('transaction.info', $item->id) }}">
+                                    {{ $item->invoice }}</a>
 
                             </td>
                             <td data-label="Kasir">
@@ -55,7 +52,8 @@
 
                                     <x-dropdown.item icon="eye" href="{{ route('transaction.info', $item->id) }}"
                                         label="Info Detail" />
-                                    <x-dropdown.item wire:click="pay('{{$item->change}}', '{{$item->id}}')" icon="currency-dollar" label="Bayar " />
+                                    <x-dropdown.item wire:click="pay('{{ $item->change }}', '{{ $item->id }}')"
+                                        icon="currency-dollar" label="Bayar " />
                                 </x-dropdown>
                             </td>
                         </tr>
@@ -74,17 +72,14 @@
                 <x-toggle label="Lunaskan" wire:model="lunas" />
             </div>
 
-           @if (!$lunas)
-           <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            @if (!$lunas)
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 
-            <x-inputs.currency label="Dibayar" placeholder="0" wire:model="dibayar" />
-            <x-inputs.currency label="Sisa Piutang" placeholder="0" wire:model.defer="change" aria-readonly="" readonly />
-        </div>
-           @endif
-
-
-
-
+                    <x-input type="number" label="Dibayar" placeholder="0" wire:model="dibayar" />
+                    <x-input type="number" label="Sisa Piutang" placeholder="0" wire:model.defer="change"
+                        aria-readonly="" readonly />
+                </div>
+            @endif
             <x-slot name="footer">
                 <div class="flex justify-end gap-x-4">
                     <x-button flat label="Cancel" x-on:click="close" />

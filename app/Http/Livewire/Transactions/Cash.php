@@ -18,10 +18,12 @@ class Cash extends  Template
     {
         return view('livewire.transactions.pos-cash');
     }
-public function clear(){
-    $this->reset('field');
-}
-    public function submit(){
+    public function clear()
+    {
+        $this->reset('field');
+    }
+    public function submit()
+    {
         $this->validate([
             'field.type' => 'required',
             'field.amount' => 'required|numeric',
@@ -36,7 +38,7 @@ public function clear(){
             'paid' => $this->field['amount'],
             'paid_status' => 'fullypaid',
             'type' => $this->field['type'],
-            'notice' =>$this->field['notice'],
+            'notice' => $this->field['notice'],
         ]);
 
 

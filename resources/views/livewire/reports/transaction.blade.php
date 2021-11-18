@@ -11,11 +11,9 @@
                 <x-select.option label="Perpanjang Member" value="renew_member" />
             </x-select>
             <x-datetime-picker wire:model.defer="fstart" label="Dari Tanggal" without-time display-format="YYYY-MM-DD"
-                parse-format="YYYY-MM-DD" placeholder="Dari Tanggal" display-format="DD-MM-YYYY HH:mm"
-                />
+                parse-format="YYYY-MM-DD" placeholder="Dari Tanggal" display-format="DD-MM-YYYY HH:mm" />
             <x-datetime-picker wire:model.defer="fend" label="Sampai Tanggal" without-time display-format="YYYY-MM-DD"
-                parse-format="YYYY-MM-DD" placeholder="Sampai Tanggal" display-format="DD-MM-YYYY HH:mm"
-                />
+                parse-format="YYYY-MM-DD" placeholder="Sampai Tanggal" display-format="DD-MM-YYYY HH:mm" />
             <x-button wire:click="filter" label="Filter laporan" positive icon="filter" />
         </div>
     </x-card>
@@ -42,7 +40,7 @@
             </div>
             <div>
                 <h1 class="text-sm font-semibold">Jumlah Transaksi</h1>
-                <h2 class="text-lg font-bold">{{$totals->total}}</h2>
+                <h2 class="text-lg font-bold">{{ $totals->total }}</h2>
             </div>
         </div>
         <div class="flex items-center p-3 space-x-5 bg-green-100 rounded-lg shadow">
@@ -85,38 +83,41 @@
                     <tbody>
                         @foreach ($data as $item)
 
-                                <tr>
-                                    <td>
-                                        @if ($item->type == 'cashout')
+                            <tr>
+                                <td>
+                                    @if ($item->type == 'cashout')
                                         <x-icon name="chevron-double-down" class="w-5 h-5 text-red-700" />
-                                        @else
+                                    @else
                                         <x-icon name="chevron-double-up" class="w-5 h-5 text-green-700" />
-                                        @endif
+                                    @endif
 
-                                    </td>
-                                    <td data-label="Invoice">
-                                        <a href="{{route('transaction.info', $item->id)}}" class="text-green-500 underline">{{ $item->invoice }}</a>
-                                    </td>
-                                    <td data-label="Kasir">
-                                        {{ $item->user->name }}
-                                    </td>
-                                    <td data-label="Type">
-                                        {{ type_trans($item->type) }}
-                                    </td>
+                                </td>
+                                <td data-label="Invoice">
+                                    <a href="{{ route('transaction.info', $item->id) }}"
+                                        class="text-green-500 underline">{{ $item->invoice }}</a>
+                                </td>
+                                <td data-label="Kasir">
+                                    {{ $item->user->name }}
+                                </td>
+                                <td data-label="Type">
+                                    {{ type_trans($item->type) }}
+                                </td>
 
-                                    <td data-label="Total">
-                                       @rupiah($item->total)
-                                    </td>
-                                    <td data-label="Status Bayar">
-                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none  {{$item->paid_status == 'paylater' ? 'text-gray-100 bg-gray-600 ' : 'text-green-100 bg-green-600' }} capitalize rounded-full"> {{ $item->paid_status }}</span>
+                                <td data-label="Total">
+                                    @rupiah($item->total)
+                                </td>
+                                <td data-label="Status Bayar">
+                                    <span
+                                        class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none  {{ $item->paid_status == 'paylater' ? 'text-gray-100 bg-gray-600 ' : 'text-green-100 bg-green-600' }} capitalize rounded-full">
+                                        {{ $item->paid_status }}</span>
 
-                                    </td>
-                                    <td data-label="Tanggal">
-                                        {{ $item->created_at->format('d M y H:i') }}
-                                    </td>
+                                </td>
+                                <td data-label="Tanggal">
+                                    {{ $item->created_at->format('d M y H:i') }}
+                                </td>
 
 
-                                </tr>
+                            </tr>
 
                         @endforeach
                     </tbody>

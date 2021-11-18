@@ -29,8 +29,9 @@ class Data extends Template
     {
         if ($value > $this->sisa) {
             $this->dibayar = $this->sisa;
+        } else {
+            $this->change = ($this->sisa - $value);
         }
-        $this->change = ($this->sisa - $value);
     }
 
     public function submit()
@@ -43,10 +44,10 @@ class Data extends Template
                 'user_id' => auth()->id(),
                 'amount' => $trans->change,
                 'total' => $trans->change,
-                'paid' => $trans->change,
+                'paid' =>  $trans->change,
                 'paid_status' => 'fullypaid',
                 'type' => 'cashin',
-                'notice' => 'Pembayaran Piutang Dari Invoice '.$trans->invoice,
+                'notice' => 'Pembayaran Piutang Dari Invoice ' . $trans->invoice,
             ]);
             $trans->paid_status = 'lunas';
             $trans->paid = $trans->total;
@@ -56,12 +57,12 @@ class Data extends Template
             $kas = Transaction::create([
 
                 'user_id' => auth()->id(),
-                'amount' => $this->dibayar >= $trans->change ?  $trans->change : $this->dibayar,
+                'amount' => $trans->change,
                 'total' => $this->dibayar >= $trans->change ?  $trans->change : $this->dibayar,
-                'paid' => $this->dibayar >= $trans->change ?  $trans->change : $this->dibayar,
+                'paid' => $this->dibayar,
                 'paid_status' => 'fullypaid',
                 'type' => 'cashin',
-                'notice' => 'Pembayaran Piutang Dari Invoice '.$trans->invoice,
+                'notice' => 'Pembayaran Piutang Dari Invoice ' . $trans->invoice,
             ]);
             $trans->update([
                 'paid_status' => $this->dibayar >= $trans->change ?  'lunas' : 'paylater',

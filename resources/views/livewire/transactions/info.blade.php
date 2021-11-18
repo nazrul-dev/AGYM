@@ -20,8 +20,8 @@
 
                 @if (in_array($transaction->type, ['cashout', 'cashin']))
 
-                <div class="font-semibold"><span class="font-normal">Total</span> : @rupiah($transaction->total)
-                </div>
+                    <div class="font-semibold"><span class="font-normal">Total</span> : @rupiah($transaction->total)
+                    </div>
                     <div class="font-semibold"><span class="font-normal">Kasir</span> :
                         {{ $transaction->user->name ?? 0 }} </div>
 
@@ -53,7 +53,7 @@
                             @rupiah($transaction->paid)
                         </div>
                         <div class="font-semibold"><span class="font-normal">Uang Kembalian</span> :
-                            @rupiah($transaction->paid - $transaction->total) </div>
+                            @rupiah(($transaction->paid - $transaction->amount) + $transaction->discount) </div>
                     @endif
 
                     <div class="font-semibold"><span class="font-normal">Kasir</span> :
@@ -76,26 +76,26 @@
         @if ($transaction->type == 'sale')
             <x-card title="Item Order">
                 @foreach ($transaction->dec_orders as $item)
-                <div class="p-3 my-2 border rounded-xl">
-                    <div class="flex items-center justify-between">
+                    <div class="p-3 my-2 border rounded-xl">
+                        <div class="flex items-center justify-between">
 
-                        <div class="flex items-center">
+                            <div class="flex items-center">
 
-                            <div class="pl-2">
-                                Produk <strong>{{ $item['name'] }}</strong><br>
-                                Harga <strong>@rupiah($item['price'])</strong> <br> Quantity
-                                <strong>{{ $item['quantity'] . ' PCS' }}</strong>
+                                <div class="pl-2">
+                                    Produk <strong>{{ $item['name'] }}</strong><br>
+                                    Harga <strong>@rupiah($item['price'])</strong> <br> Quantity
+                                    <strong>{{ $item['quantity'] . ' PCS' }}</strong>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <p>Subtotal</p>
-                            <strong>
-                                @rupiah($item['price'] * $item['quantity'])
-                            </strong>
-                        </div>
+                            <div>
+                                <p>Subtotal</p>
+                                <strong>
+                                    @rupiah($item['price'] * $item['quantity'])
+                                </strong>
+                            </div>
 
+                        </div>
                     </div>
-                </div>
                 @endforeach
             </x-card>
         @endif

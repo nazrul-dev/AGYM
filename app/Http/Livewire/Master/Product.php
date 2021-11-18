@@ -21,19 +21,13 @@ class Product extends Template
         'product.barcode'       => 'nullable',
         'stock_s'               => 'numeric|required',
         'stock_w'               => 'numeric|required',
-        'product.image'         => 'nullable'
+        'image'                 => 'nullable'
 
     ];
-    public function lfmSingle($value)
-    {
-        $data = explode(',', $value);
-
-        $this->product['image'] = $data[0];
-    }
 
     public function mount()
     {
-        if (!in_array(auth()->user()->role,['master', 'operator'])) {
+        if (!in_array(auth()->user()->role, ['master', 'operator'])) {
             return abort(403, 'Tidak Memiliki Akses');
         }
         $this->product = new ModelsProduct();
@@ -47,9 +41,8 @@ class Product extends Template
 
     public function form($value = true, $id = null)
     {
-
-        $this->reset(['mform', 'update',  'stock_s', 'stock_w']);
-        $this->product['image'] = '';
+        $this->dispatchBrowserEvent('resetInput');
+        $this->reset(['mform', 'update',  'stock_s', 'stock_w', 'image']);
         $this->product = new ModelsProduct();
         if ($value) {
             $this->update = false;
@@ -70,6 +63,14 @@ class Product extends Template
     {
 
         $this->validate();
+
+        if ($this->image) {
+
+            $imageName = time() . '.' . $this->image->extension();
+            $this->image->storeAs('images', $imageName, 'public_path');
+            $this->product['image'] = $imageName;
+        }
+
         $product = ModelsProduct::updateOrCreate(
             ['id' => $this->product->id],
             $this->product->toArray()

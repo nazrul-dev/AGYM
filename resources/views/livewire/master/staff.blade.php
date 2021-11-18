@@ -4,8 +4,7 @@
     </div>
     <x-card title="Data Staff">
         <x-slot name="action">
-            <x-input icon="search" type="search"
-                wire:model="searchTerm" placeholder="Cari Produk / Barcode" />
+            <x-input icon="search" type="search" wire:model="searchTerm" placeholder="Cari Produk / Barcode" />
         </x-slot>
         <table>
             <thead>
@@ -30,7 +29,8 @@
                             <div class="gap-2 action-cell md:flex md:justify-end">
                                 <x-button icon="pencil" spinner="edit" wire:click="form(false,{{ $item->id }})"
                                     warning xs />
-                                <x-button icon="key" spinner="passwordReset" wire:click="passwordReset('{{ $item->id }}')" info xs />
+                                <x-button icon="key" spinner="passwordReset"
+                                    wire:click="passwordReset('{{ $item->id }}')" info xs />
                                 <x-button wire:click="triggerConfirm('delete', '{{ $item->id }}')" icon="trash"
                                     negative xs />
                             </div>
@@ -41,9 +41,9 @@
         </table>
     </x-card>
     <x-modal.card title="Password Reset" blur wire:model.defer="mPass">
-       <h1 class="mb-2">Ini adalah Password Baru Anda </h1>
+        <h1 class="mb-2">Ini adalah Password Baru Anda </h1>
         <div class="p-5 bg-yellow-100 border border-dashed">
-            <h1 class="text-2xl font-bold tracking-widest">{{$newpass}}</h1>
+            <h1 class="text-2xl font-bold tracking-widest">{{ $newpass }}</h1>
         </div>
         <x-slot name="footer">
             <div class="flex justify-end gap-2">

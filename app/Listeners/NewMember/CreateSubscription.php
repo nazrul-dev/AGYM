@@ -3,6 +3,7 @@
 namespace App\Listeners\NewMember;
 
 use App\Events\AfterNewMember;
+use App\Models\MemberSubscription;
 use Carbon\CarbonImmutable;
 
 class CreateSubscription
@@ -26,8 +27,14 @@ class CreateSubscription
     public function handle(AfterNewMember $event)
     {
 
-        $event->member->subscription()->create([
-            'expired_at' => CarbonImmutable::now()->add(30, 'day')
-        ]);
+        MemberSubscription::updateOrCreate(
+            [
+                'member_id' => $event->member->id,
+            ],
+            [
+                'member_id' => $event->member->id,
+                'expired_at' => CarbonImmutable::now()->add(30, 'day')
+            ]
+        );
     }
 }

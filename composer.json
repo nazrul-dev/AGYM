@@ -14,8 +14,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.6",
-        "ph7jack/wireui": "^0.13.4",
-        "unisharp/laravel-filemanager": "^2.3"
+        "ph7jack/wireui": "^0.13.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

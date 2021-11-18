@@ -10,11 +10,13 @@ class ProductStock extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function product(){
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
 
-    public function getTotalStockAttribute(){
+    public function getTotalStockAttribute()
+    {
         return $this->stock_warehouse + $this->stock_store;
     }
 }

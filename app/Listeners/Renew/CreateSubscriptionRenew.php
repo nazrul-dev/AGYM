@@ -20,21 +20,22 @@ class CreateSubscriptionRenew
     public function handle(AfterRenew $event)
     {
         $expired =  $event->data->member->subscription->expired_at;
-        if($expired >= Carbon::now()){
+        if ($expired >= Carbon::now()) {
             $newExpired = $expired->addDays(30);
-        }else{
+        } else {
             $newExpired = CarbonImmutable::now()->add(30, 'day');
         }
-        $id = $event->data->member->subscription()->update([
+        $exe = $event->data->member->subscription()->update([
             'expired_at' =>  $newExpired,
         ]);
-
-        SubscriptionRenew::create([
-            'transaction_id' => $event->data->transaction->id,
-            'member_subscription_id' =>$id,
-            'renew_start' =>  Carbon::now(),
-            'renew_end' => $newExpired,
-            'amount' => $event->data->transaction->amount
-        ]);
+        if ($exe) {
+            SubscriptionRenew::create([
+                'transaction_id' => $event->data->transaction->id,
+                'member_subscription_id' =>  $event->data->member->subscription->id,
+                'renew_start' =>  Carbon::now(),
+                'renew_end' => $newExpired,
+                'amount' => $event->data->transaction->amount
+            ]);
+        }
     }
 }

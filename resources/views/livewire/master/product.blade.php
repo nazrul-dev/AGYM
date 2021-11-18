@@ -19,9 +19,9 @@
             <tbody>
                 @foreach ($products as $item)
                     <tr>
-                        <td data-label="Produk" >{{ $item->name }}</td>
-                        <td data-label="Kategori" > {{ $item->category->name }}</td>
-                        <td data-label="Harga Jual" >@rupiah($item->price)</td>
+                        <td data-label="Produk">{{ $item->name }}</td>
+                        <td data-label="Kategori"> {{ $item->category->name }}</td>
+                        <td data-label="Harga Jual">@rupiah($item->price)</td>
                         <td data-label="Total Stok">
                             <x-button xs positive label="{{ $item->stock->totalstock . ' PCS' }}"
                                 wire:click="viewStockTrigger({{ $item->stock }})" />
@@ -94,17 +94,18 @@
 
             </x-select>
             <x-input label="Barcode" wire:model.defer="product.barcode" />
-            @if ($product['image'])
 
-                <div>
-                    <img class="object-scale-down w-full h-48" src="{{ $product['image'] }}" alt="Logo Brand">
-                </div>
-            @endif
-            <div class="col-span-1 sm:col-span-2">
-                <x-button id="lfmSingle" label="Pilih Foto" positive />
-
+            <div class="col-span-2">
+                <x-input type="file" accept=".jpg,.png" class="p-2" id="image" label="Foto Produk"
+                    wire:model="image" />
+                <div wire:loading wire:target="image" class="mt-2 animate-pulse">Harap menunggu Sedang Mengupload
+                    Foto....</div>
+                @if ($update)
+                    <br>
+                    <label for="" class="text-red-500">Silahkan Masukan Foto Kembali Apabila Anda Ingin Mengubah Foto
+                        Produk</label>
+                @endif
             </div>
-
         </div>
 
         <x-slot name="footer">
@@ -114,4 +115,12 @@
             </div>
         </x-slot>
     </x-modal.card>
+
+    @push('scripts')
+        <script>
+            window.addEventListener('resetInput', event => {
+                document.getElementById("image").value = "";
+            })
+        </script>
+    @endpush
 </div>

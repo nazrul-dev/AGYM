@@ -63,18 +63,26 @@
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 
             <x-input label="Nama Depan" wire:model.defer="pelanggan.first_name" />
-                <x-input label="Nama Belakang" wire:model.defer="pelanggan.last_name" />
+            <x-input label="Nama Belakang" wire:model.defer="pelanggan.last_name" />
             @if ($tunai)
-                <x-inputs.currency label="Dibayar" placeholder="0" wire:model="dibayar" />
+                <x-input label="Dibayar" type="number" placeholder=" 0" wire:model="dibayar" />
 
-                <x-inputs.currency label="Sisa Kembalian" placeholder="0" wire:model.defer="kembalian" aria-readonly="" readonly />
+                <x-input label="Sisa Kembalian" type="number" placeholder="0" wire:model.defer="kembalian"
+                    aria-readonly="" readonly />
+                @if ($dibayar > $cart['total'] || $kembalian > 0)
+                    <div class="my-2">
+                        <x-toggle label="Simpan Sisa Kembalian" wire:model="simpansisa" />
+                    </div>
+                @endif
+
             @else
-                <x-inputs.currency label="Panjar / DP" placeholder="0" wire:model="panjar" />
-                <x-inputs.currency label="Sisa Piutang" placeholder="0" wire:model.defer="sisa" aria-readonly="" readonly />
+                <x-input label="Panjar / DP" type="number" placeholder="0" wire:model="panjar" />
+                <x-input label="Sisa Piutang" type="number" placeholder="0" wire:model.defer="sisa" aria-readonly=""
+                    readonly />
                 <div class="col-span-2">
-                    <x-datetime-picker wire:model.defer="duedate" label="Peringatan Jatuh Tempo" without-time display-format="YYYY-MM-DD"
-                    parse-format="YYYY-MM-DD" placeholder="Tanggal " display-format="DD-MM-YYYY HH:mm"
-                     />
+                    <x-datetime-picker wire:model.defer="duedate" label="Peringatan Jatuh Tempo" without-time
+                        display-format="YYYY-MM-DD" parse-format="YYYY-MM-DD" placeholder="Tanggal "
+                        display-format="DD-MM-YYYY HH:mm" />
                 </div>
             @endif
         </div>

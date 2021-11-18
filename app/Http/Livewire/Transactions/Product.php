@@ -6,6 +6,8 @@ use App\Events\AfterSale;
 use App\Http\Livewire\Template;
 use App\Models\Product as ModelsProduct;
 use App\Models\ProductStock;
+use App\Models\Simpanan;
+use App\Models\StockHistory;
 use App\Models\Transaction;
 
 class Product extends Template
@@ -21,6 +23,7 @@ class Product extends Template
     public $notice = '';
     public $duedate;
     public $mcheckout = false;
+    public $simpansisa = false;
 
     public function mount()
     {
@@ -51,38 +54,42 @@ class Product extends Template
         $cart['contents'] = \Cart::session(auth()->id())->getContent();
         $cart['tqty'] = \Cart::session(auth()->id())->getTotalQuantity();
 
-        $products = ModelsProduct::whereHas('stock', function($q){
+        $products = ModelsProduct::whereHas('stock', function ($q) {
             $q->where('stock_store', '>=', 1);
-        })->whereHas('category', function($q){
+        })->whereHas('category', function ($q) {
             $q->where('name', 'like', '%' . $this->searchTerm . '%');
         })->orWhere(function ($q) {
             $q->where('name', 'like', '%' . $this->searchTerm . '%');
             $q->orWhere('barcode', 'like', '%' . $this->searchTerm . '%');
-
         })->latest()->get();
         return view('livewire.transactions.pos-product', compact('products', 'cart'));
     }
 
-    public function updatedTunai()
+    public function updatingTunai()
     {
         $this->reset('panjar', 'sisa', 'kembalian', 'dibayar');
     }
 
-    public function  updatedPanjar($value)
+    public function  updatingPanjar(int $value)
     {
-        $total = \Cart::session(auth()->id())->getTotal();
-        if ($value >= $total) {
-            $this->panjar = 0;
-            $this->sisa = $total;
-        } else {
-            $this->sisa = $total - $value;
+        if ($value) {
+            $total = (int) \Cart::session(auth()->id())->getTotal();
+
+            if ($value > $total) {
+                $this->panjar = $total;
+                $this->sisa = 0;
+            } else {
+                $this->sisa = $total - $value;
+            }
         }
     }
 
-    public function  updatedDibayar($value)
+    public function  updatingDibayar($value)
     {
-        $total = \Cart::session(auth()->id())->getTotal();
-        $this->kembalian = ($value -  $total);
+        if ($value) {
+            $total = \Cart::session(auth()->id())->getTotal();
+            $this->kembalian = ($value -  $total);
+        }
     }
 
     public function changeQty($rowId, $type, int $qty)
@@ -127,15 +134,30 @@ class Product extends Template
 
     public function submit()
     {
+
         $total = \Cart::session(auth()->id())->getTotal();
-        // if ($this->tunai) {
-        //     $this->validate([
-        //         'dibayar' => 'required|numeric',
-        //     ]);
-        // }else{
 
-        // }
+        if (!$this->tunai) {
+            if ($this->panjar > $total) {
+                $this->mcheckout = false;
 
+                return  $this->notification()->notify([
+                    'title'       => 'Error',
+                    'description' => 'Jumlah Panjar Tidak Bisa Lebih Dari Total Belanja',
+                    'icon'        => 'error',
+                ]);
+            }
+        } else {
+            if ($this->dibayar < $total) {
+                $this->mcheckout = false;
+
+                return  $this->notification()->notify([
+                    'title'       => 'Error',
+                    'description' => 'Jumlah Pembayaran Kurang Dari Total Belanja',
+                    'icon'        => 'error',
+                ]);
+            }
+        }
 
         $Transaction = Transaction::create([
             'customers' => json_encode($this->pelanggan),
@@ -143,7 +165,7 @@ class Product extends Template
             'orders' => json_encode(\Cart::session(auth()->id())->getContent(), true),
             'due_date' => $this->tunai ? null : $this->duedate,
             'amount' => $total,
-            'total' => $total,
+            'total' => $this->tunai ? $total : $this->panjar,
             'change' => $this->tunai ? 0 : ($total - $this->dibayar),
             'paid' => $this->tunai ? $this->dibayar : $this->panjar,
             'paid_status' => $this->tunai ? 'fullypaid' : 'paylater',
@@ -151,11 +173,30 @@ class Product extends Template
             'notice' => $this->notice,
         ]);
 
-        foreach(\Cart::session(auth()->id())->getContent() as $order){
+        foreach (\Cart::session(auth()->id())->getContent() as $order) {
             $prod = ProductStock::where('product_id', $order['id'])->first();
             $prod->decrement('stock_store', $order['quantity']);
             $prod->increment('stock_sold', $order['quantity']);
+            $last_amount = $prod->stock_store;
+            StockHistory::create([
+                'product_id' => $order['id'],
+                'type' => 'store',
+                'status' => 'down',
+                'value' => $order['quantity'],
+                'last_amount' =>  $last_amount,
+                'notice' => 'Pengurangan  Stok Dari Penjualan'
+            ]);
         }
+        if ($this->simpansisa && $this->tunai) {
+            if ($this->dibayar > $total || $this->kembalian > 0) {
+                Simpanan::create([
+                    'f_name' =>  $this->pelanggan['first_name'],
+                    'l_name' =>  $this->pelanggan['last_name'],
+                    'amount' => ($this->dibayar - $total)
+                ]);
+            }
+        }
+
 
         $this->cartClear();
         $this->clear();
@@ -183,11 +224,6 @@ class Product extends Template
 
     public function clear()
     {
-        $this->reset('panjar', 'sisa', 'kembalian', 'dibayar', 'pelanggan', 'mcart', 'mqty', 'qty', 'tunai', 'productSeleced', 'notice', 'duedate', 'mcheckout');
-    }
-
-    public function redirectInfoTransaksi($id)
-    {
-        return redirect()->to(route('transaction.info', $id));
+        $this->reset('panjar', 'simpansisa', 'sisa', 'kembalian', 'dibayar', 'pelanggan', 'mcart', 'mqty', 'qty', 'tunai', 'productSeleced', 'notice', 'duedate', 'mcheckout');
     }
 }

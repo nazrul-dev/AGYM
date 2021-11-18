@@ -9,13 +9,12 @@ class SubscriptionRenew extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $with = ['subscription', 'transaction'];
+    protected $with = ['transaction'];
     public $dates = ['renew_start', 'renew_end'];
-    public function subscription(){
-        return $this->belongsTo(MemberSubscription::class);
-    }
 
-    public function transaction(){
+
+    public function transaction()
+    {
         return $this->belongsTo(Transaction::class);
     }
 }

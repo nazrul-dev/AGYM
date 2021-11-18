@@ -10,7 +10,7 @@ class Member extends Model
 {
     use  HasFactory, SoftDeletes;
     protected $guarded = [];
-    protected $with = ['subscription'];
+    protected $with = ['subscription', 'transaction'];
 
     public function subscription()
     {
